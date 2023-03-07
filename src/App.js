@@ -1,22 +1,40 @@
-import logo from './logo.svg';
 import './App.css';
 
+import React, { useState, useEffect } from 'react';
+
+
+
 function App() {
+
+  const [data, setData] = useState(null);
+
+  async function obtenerDatos() {
+    const respuesta = await fetch('https://pokeapi.co/api/v2/pokemon/');
+    const datos = await respuesta.json();
+    setData(datos.results);
+  }
+
+  useEffect(() => {
+    obtenerDatos();
+  }, []);
+
+  console.log(data);
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      {data ? (
+        <div >
+          {data.map((dato) => (
+              <div key={dato.name} >
+                {dato.name}
+              </div>
+          ))}
+          </div>
+        ) : (
+          <p>Cargando datos...</p>
+        )}
+
       </header>
     </div>
   );
